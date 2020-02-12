@@ -1,6 +1,5 @@
-
-const controller = require('../controllers/category')
-const validate  = require('../controllers/category.validate')
+const controller = require('../controllers/categories')
+const validate = require('../controllers/categories.validate')
 const AuthController = require('../controllers/auth')
 const express = require('express')
 const router = express.Router()
@@ -11,15 +10,63 @@ const requireAuth = passport.authenticate('jwt', {
 })
 const trimRequest = require('trim-request')
 
+/*
+ * Categories routes
+*/
+
+/*
+ * Get all items route
+*/
+router.get('/all', controller.getAllItems)
 
 /*
  * Create new item route
-*/
+ */
 router.post(
-    '/category',
-    requireAuth,
-    AuthController.roleAuthorization(['admin']),
-    trimRequest.all,
-    validate.newCategoryItem,
-    controller.newCategoryItem
+  '/',
+  requireAuth,
+  AuthController.roleAuthorization(['admin']),
+  trimRequest.all,
+  validate.createItem,
+  controller.createItem
 )
+
+/*
+ * Get item route
+ */
+router.get(
+  '/:id',
+  requireAuth,
+  AuthController.roleAuthorization(['admin']),
+  trimRequest.all,
+  validate.getItem,
+  controller.getItem
+)
+
+/*
+ * Update item route
+ */
+router.patch(
+  '/:id',
+  requireAuth,
+  AuthController.roleAuthorization(['admin']),
+  trimRequest.all,
+  validate.updateItem,
+  controller.updateItem
+)
+
+/*
+ * Delete item route
+ */
+router.delete(
+  '/:id',
+  requireAuth,
+  AuthController.roleAuthorization(['admin']),
+  trimRequest.all,
+  validate.deleteItem,
+  controller.deleteItem
+)
+
+
+
+module.exports = router

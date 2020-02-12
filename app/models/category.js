@@ -1,11 +1,12 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const CategorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
       uppercase: true,
+      unique: true,
       required: true
     },
   },
@@ -14,4 +15,5 @@ const CategorySchema = new mongoose.Schema(
     timestamps: true
   }
 )
-module.exports = mongoose.model('CategorySchema', CategorySchema)
+CategorySchema.plugin(mongoosePaginate)
+module.exports = mongoose.model('Category', CategorySchema)
