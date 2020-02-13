@@ -58,41 +58,41 @@ router.post(
   controller.createItem
 )
 
-/*
- * Get item route
- */
-router.get(
-  '/:id',
-  requireAuth,
-  AuthController.roleAuthorization(['admin']),
-  trimRequest.all,
-  validate.getItem,
-  controller.getItem
-)
+// /*
+//  * Get item route
+//  */
+// router.get(
+//   '/:id',
+//   requireAuth,
+//   AuthController.roleAuthorization(['admin']),
+//   trimRequest.all,
+//   validate.getItem,
+//   controller.getItem
+// )
 
-/*
- * Update item route
- */
-router.patch(
-  '/:id',
-  requireAuth,
-  AuthController.roleAuthorization(['admin']),
-  trimRequest.all,
-  validate.updateItem,
-  controller.updateItem
-)
+// /*
+//  * Update item route
+//  */
+// router.patch(
+//   '/:id',
+//   requireAuth,
+//   AuthController.roleAuthorization(['admin']),
+//   trimRequest.all,
+//   validate.updateItem,
+//   controller.updateItem
+// )
 
-/*
- * Delete item route
- */
-router.delete(
-  '/:id',
-  requireAuth,
-  AuthController.roleAuthorization(['admin']),
-  trimRequest.all,
-  validate.deleteItem,
-  controller.deleteItem
-)
+// /*
+//  * Delete item route
+//  */
+// router.delete(
+//   '/:id',
+//   requireAuth,
+//   AuthController.roleAuthorization(['admin']),
+//   trimRequest.all,
+//   validate.deleteItem,
+//   controller.deleteItem
+// )
 
 
 

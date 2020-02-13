@@ -12,7 +12,7 @@ const emailer = require('../middleware/emailer')
 /**
  * Creates a new item in database
  * @param {Object} req - request object
- */
+*/
 const createItem = async req => {
   return new Promise((resolve, reject) => {
     const user = new model({
