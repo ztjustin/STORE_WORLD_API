@@ -43,7 +43,7 @@ const storage = multer.diskStorage({
 /*
  * Get all items route
 */
-router.get('/all', controller.getAllItems)
+router.get('/all', controller.getItems)
 
 /*
  * Create new item route
