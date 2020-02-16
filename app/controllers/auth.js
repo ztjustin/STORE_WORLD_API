@@ -79,6 +79,7 @@ const saveUserAccessAndReturnToken = async (req, user) => {
       }
       const userInfo = setUserInfo(user)
       // Returns data with access token
+
       resolve({
         token: generateToken(user._id),
         user: userInfo
@@ -455,7 +456,10 @@ exports.login = async (req, res) => {
       // all ok, register access and return token
       user.loginAttempts = 0
       await saveLoginAttemptsToDB(user)
-      res.status(200).json(await saveUserAccessAndReturnToken(req, user))
+      let userItem = await saveUserAccessAndReturnToken(req,user);
+      // Send Set-Cookie header
+      res.cookie('STORE_CREDENTIAL', userItem.token);
+      res.status(200).json("Welcome To STORE CR")
     }
   } catch (error) {
     utils.handleError(res, error)
