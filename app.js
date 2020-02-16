@@ -57,6 +57,7 @@ i18n.configure({
 app.use(i18n.init)
 
 // Init all other stuff
+app.use("/images", express.static(path.join("/public/images")))
 app.use(cors())
 app.use(passport.initialize())
 app.use(compression())

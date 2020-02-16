@@ -15,20 +15,51 @@ const emailer = require('../middleware/emailer')
 */
 const createItem = async req => {
   return new Promise((resolve, reject) => {
+    urlPath = req.protocol + '://' + req.get("host");
     const product = new model({
-      name: req.name,
-      category: req.category
+      name: req.body.name,
+      category: req.body.category,
+      url: urlPath + '/public/images/' + req.file.filename
     })
     product.save((err, item) => {
       
       if (err) {
         reject(utils.buildErrObject(422, err.message))
       }
+
       resolve(item)
 
     })
   })
 }
+
+const multer = require("multer")
+
+const MIME_TYPE_MAP = {
+  'image/png': 'png',
+  'image/jpg': 'jpg',
+  'image/jpeg': 'jpeg'
+};
+
+const storage = multer.diskStorage({ 
+  destination: (req,file,cb) => {
+      const isValid = MIME_TYPE_MAP[file.mimetype];
+      let error = new Error("Invalid Type");
+
+      if(isValid){
+        error = null
+      }
+      cb(error,"public/images");
+  },
+  filename: (req, file, cb) => {
+    const name = file.originalname.toLowerCase().split(" ").join('-');
+    const ext = MIME_TYPE_MAP[file.mimetype];
+    cb(null, name + "-" + Date.now() + '.' + ext);
+
+  } 
+})
+
+exports.upload = multer({ storage: storage}).single("image")
 
 /********************
  * Public functions *
@@ -91,15 +122,8 @@ exports.updateItem = async (req, res) => {
  */
 exports.createItem = async (req, res) => {
   try {
-    // Gets locale from header 'Accept-Language'
-    const locale = req.getLocale()
-    req = matchedData(req)
-    const doesEmailExists = await emailer.emailExists(req.email)
-    if (!doesEmailExists) {
-      const item = await createItem(req)
-      emailer.sendRegistrationEmailMessage(locale, item)
-      res.status(201).json(item)
-    }
+    const item = await createItem(req)
+    res.status(201).json(item)
   } catch (error) {
     utils.handleError(res, error)
   }
