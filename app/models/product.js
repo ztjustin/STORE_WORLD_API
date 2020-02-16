@@ -15,31 +15,26 @@ const ProductSchema = new mongoose.Schema(
         ref: "Category",
         required: true
     },
-    url: {
-      type: String
-  },
-    // price: {
-    //   type: Number,
-    //   required: true
-    // },
-    // stock: {
-    //   type: Number,
-    //   required: true
-    // },
-    // itemsSold: {
-    //   type: Number,
-    //   default: 0,
-    //   required: true
-    // },
-    // like: {
-    //   type: Number,
-    //   default: 0,
-    //   required: true
-    // },
-    // urlImage: {
-    //   type: String,
-    //   required: true
-    // },
+    price: {
+      type: Number,
+      required: true
+    },
+    stock: {
+      type: Number,
+      required: true
+    },
+    itemsSold: {
+      type: Number,
+      default: 0,
+    },
+    like: {
+      type: Number,
+      default: 0,
+    },
+    urlImage: {
+      type: String,
+      required: true
+    },
   },
   {
     versionKey: false,

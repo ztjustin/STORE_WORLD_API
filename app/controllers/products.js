@@ -13,13 +13,28 @@ const emailer = require('../middleware/emailer')
  * Creates a new item in database
  * @param {Object} req - request object
 */
-const createItem = async req => {
+const createItem = async (req,res) => {
   return new Promise((resolve, reject) => {
+    if(!req.file){
+      return res.status(200).json({
+        'errors' : {
+          "msg": [
+            {
+                "msg": "MISSING FILE",
+                "param": "image",
+                "location": "file"
+            }
+          ]
+        }
+      });
+    }
     urlPath = req.protocol + '://' + req.get("host");
     const product = new model({
       name: req.body.name,
       category: req.body.category,
-      url: urlPath + '/public/images/' + req.file.filename
+      urlImage: urlPath + '/images/' + req.file.filename,
+      price: req.body.price,
+      stock: req.body.stock
     })
     product.save((err, item) => {
       
@@ -32,6 +47,10 @@ const createItem = async req => {
     })
   })
 }
+
+/********************
+ * Multer functions *
+ ********************/
 
 const multer = require("multer")
 
@@ -59,7 +78,7 @@ const storage = multer.diskStorage({
   } 
 })
 
-exports.upload = multer({ storage: storage}).single("image")
+exports.upload = multer({ storage: storage }).single("image")
 
 /********************
  * Public functions *
@@ -122,7 +141,7 @@ exports.updateItem = async (req, res) => {
  */
 exports.createItem = async (req, res) => {
   try {
-    const item = await createItem(req)
+    const item = await createItem(req,res)
     res.status(201).json(item)
   } catch (error) {
     utils.handleError(res, error)
