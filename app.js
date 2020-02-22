@@ -9,7 +9,9 @@ const passport = require('passport')
 const app = express()
 const i18n = require('i18n')
 const initMongo = require('./config/mongo')
+const cookieParser = require('cookie-parser')
 const path = require('path')
+
 
 // Setup express server port from ENV, default: 3000
 app.set('port', process.env.PORT || 3000)
@@ -58,6 +60,7 @@ app.use(i18n.init)
 
 // Init all other stuff
 app.use("/images", express.static(path.join("/public/images")))
+app.use(cookieParser())
 app.use(cors())
 app.use(passport.initialize())
 app.use(compression())

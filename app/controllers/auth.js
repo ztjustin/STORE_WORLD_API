@@ -458,8 +458,8 @@ exports.login = async (req, res) => {
       await saveLoginAttemptsToDB(user)
       let userItem = await saveUserAccessAndReturnToken(req,user);
       // Send Set-Cookie header
-      res.cookie('STORE_CREDENTIAL', userItem.token);
-      res.status(200).json("Welcome To STORE CR")
+      res.cookie('token', userItem.token);
+      res.status(200).json(userItem)
     }
   } catch (error) {
     utils.handleError(res, error)
