@@ -15,24 +15,12 @@ const emailer = require('../middleware/emailer')
 */
 const createItem = async (req,res) => {
   return new Promise((resolve, reject) => {
-    if(!req.file){
-      return res.status(200).json({
-        'errors' : {
-          "msg": [
-            {
-                "msg": "MISSING FILE",
-                "param": "image",
-                "location": "file"
-            }
-          ]
-        }
-      });
-    }
+
     urlPath = req.protocol + '://' + req.get("host");
     const product = new model({
       name: req.body.name,
       category: req.body.category,
-      urlImage: urlPath + '/images/' + req.file.filename,
+      urlImage: urlPath + '/images/' + req.files['avatar'][0].filename,
       price: req.body.price,
       stock: req.body.stock
     })
@@ -78,7 +66,7 @@ const storage = multer.diskStorage({
   } 
 })
 
-exports.upload = multer({ storage: storage }).single("image")
+exports.upload = multer({ storage: storage }).fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
 
 /********************
  * Public functions *
@@ -141,8 +129,22 @@ exports.updateItem = async (req, res) => {
  */
 exports.createItem = async (req, res) => {
   try {
-    const item = await createItem(req,res)
-    res.status(201).json(item)
+    if(!req.files['avatar']){
+      res.status(422).json({
+        'errors' : {
+          "msg": [
+            {
+                "msg": "MISSING FILE",
+                "param": "avatar",
+                "location": "file"
+            }
+          ]
+        }
+      });
+    }else{
+      const item = await createItem(req,res)
+      res.status(201).json(item)
+    }
   } catch (error) {
     utils.handleError(res, error)
   }

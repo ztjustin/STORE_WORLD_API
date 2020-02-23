@@ -33,5 +33,8 @@
     "trim-request": "^1.0.6",
     "uuid": "^3.3.3",
     "validator": "^12.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
   }
 }
