@@ -458,7 +458,9 @@ exports.login = async (req, res) => {
       await saveLoginAttemptsToDB(user)
       let userItem = await saveUserAccessAndReturnToken(req,user);
       // Send Set-Cookie header
+      res.cookie('userInfo', JSON.stringify(userItem));
       res.cookie('token', userItem.token);
+      // { expires: new Date(Date.now() + 900000), httpOnly: true } SET THIS ON res.Cookie IF want to expired date
       res.status(200).json(userItem)
     }
   } catch (error) {

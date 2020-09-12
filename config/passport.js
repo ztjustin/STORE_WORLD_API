@@ -17,7 +17,7 @@ const jwtExtractor = req => {
   } else if (req.query.token) {
     token = req.query.token.trim()
   }else if (req && req.cookies){
-    token = req.cookies['token'].trim()
+    token = req.cookies['token']
   }
 
   if (token) {

@@ -54,6 +54,7 @@ module.exports = {
    */
   async checkQueryString(query) {
     return new Promise((resolve, reject) => {
+
       try {
         if (
           typeof query.filter !== 'undefined' &&
@@ -65,6 +66,7 @@ module.exports = {
           const array = []
           // Takes fields param and builds an array by splitting with ','
           const arrayFields = query.fields.split(',')
+
           // Adds SQL Like %word% with regex
           arrayFields.map(item => {
             array.push({
@@ -82,6 +84,39 @@ module.exports = {
       } catch (err) {
         console.log(err.message)
         reject(buildErrObject(422, 'ERROR_WITH_FILTER'))
+      }
+    })
+  },
+
+   /**
+   * Checks the query string for filtering records 
+   * between a range of Days
+   * query.filter should be the number of days to search (number)
+   * @param {Object} query - query object
+   */
+  async checkQueryStringDates(query) {
+    return new Promise((resolve, reject) => {
+
+      try {
+        if (
+          typeof query.days !== 'undefined'
+        ) {
+
+          var date = new Date();  // now
+          date.setDate(date.getDate() - query.days);
+          const data = {
+
+            createdAt: { $gte:  date }
+
+          }
+
+          resolve(data)
+        } else {
+          reject(buildErrObject(422, 'MISSING_DAYS_PARAMETER_QUERY'))
+        }
+      } catch (err) {
+        console.log(err.message)
+        reject(buildErrObject(422, 'ERROR_WITH_RANGE_DAYS'))
       }
     })
   },

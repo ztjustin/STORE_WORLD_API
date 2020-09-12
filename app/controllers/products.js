@@ -14,15 +14,37 @@ const emailer = require('../middleware/emailer')
  * @param {Object} req - request object
 */
 const createItem = async (req,res) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
 
     urlPath = req.protocol + '://' + req.get("host");
+    const urlImagesArray = await getArrayUrlImages(req.files,urlPath);
+
     const product = new model({
-      name: req.body.name,
+      model: req.body.model,
+      brand: req.body.brand,
+      engine: req.body.engine,
       category: req.body.category,
-      urlImage: urlPath + '/images/' + req.files['avatar'][0].filename,
+      year: req.body.year,
+      state: req.body.state,
       price: req.body.price,
-      stock: req.body.stock
+      like: req.body.like,
+      tradable: req.body.tradable,
+      exteriorColor: req.body.exteriorColor,
+      interiorColor: req.body.interiorColor,
+      fuel: req.body.fuel,
+      transmision: req.body.transmision,
+      km: req.body.km,
+      taxes: req.body.taxes,
+      receivedCar: req.body.receivedCar,
+      licensePlate: req.body.licensePlate,
+      doors: req.body.doors,
+      province: req.body.province,
+      comment: req.body.comment,
+      featured: req.body.featured,
+      user: req.body.user,
+      urlImages: urlImagesArray,
+      equipment: req.body.equipment
+  
     })
     product.save((err, item) => {
       
@@ -34,6 +56,25 @@ const createItem = async (req,res) => {
 
     })
   })
+}
+
+
+/********************
+ * Get Array Images *
+ ********************/
+
+const getArrayUrlImages = (files,urlPath) => {
+  let array = [];
+
+  if(files.images){
+    files.images.map((file)=> {
+      let urlImage = urlPath + '/images/' + file.filename;
+      array.push({ url: urlImage });
+    })
+  }
+
+  return array;
+
 }
 
 /********************
@@ -66,7 +107,7 @@ const storage = multer.diskStorage({
   } 
 })
 
-exports.upload = multer({ storage: storage }).fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+exports.upload = multer({ storage: storage }).fields([{ name: 'images', maxCount: 5 }])
 
 /********************
  * Public functions *
@@ -80,6 +121,21 @@ exports.upload = multer({ storage: storage }).fields([{ name: 'avatar', maxCount
 exports.getItems = async (req, res) => {
   try {
     const query = await db.checkQueryString(req.query)
+    res.status(200).json(await db.getItems(req, model, query))
+    // res.status(200).json(await getAllFeaturedsItems())
+  } catch (error) {
+    utils.handleError(res, error)
+  }
+}
+
+/**
+ * Get items function called by route
+ * @param {Object} req - request object
+ * @param {Object} res - response object
+ */
+exports.getnewItems = async (req, res) => {
+  try {
+    const query = await db.checkQueryStringDates(req.query)
     res.status(200).json(await db.getItems(req, model, query))
   } catch (error) {
     utils.handleError(res, error)
@@ -129,22 +185,24 @@ exports.updateItem = async (req, res) => {
  */
 exports.createItem = async (req, res) => {
   try {
-    if(!req.files['avatar']){
-      res.status(422).json({
-        'errors' : {
-          "msg": [
-            {
-                "msg": "MISSING FILE",
-                "param": "avatar",
-                "location": "file"
-            }
-          ]
-        }
-      });
-    }else{
-      const item = await createItem(req,res)
-      res.status(201).json(item)
-    }
+    const item = await createItem(req,res)
+    res.status(201).json(item)
+    // if(!req.files['images']){
+    //   res.status(422).json({
+    //     'errors' : {
+    //       "msg": [
+    //         {
+    //             "msg": "MISSING FILE",
+    //             "param": "images",
+    //             "location": "file"
+    //         }
+    //       ]
+    //     }
+    //   });
+    // }else{
+    //   const item = await createItem(req,res)
+    //   res.status(201).json(item)
+    // }
   } catch (error) {
     utils.handleError(res, error)
   }
@@ -163,4 +221,21 @@ exports.deleteItem = async (req, res) => {
   } catch (error) {
     utils.handleError(res, error)
   }
+}
+
+/**
+ * Gets all items from database
+ */
+const getAllFeaturedsItems = async () => {
+  return new Promise((resolve, reject) => {
+    model.find(
+      { featured: true }, { }, { sort: { 'createdAt' : -1 } },
+      (err, items) => {
+        if (err) {
+          reject(utils.buildErrObject(422, err.message))
+        }
+        resolve(items)
+      }
+    ).limit( 2 )
+  })
 }

@@ -32,6 +32,24 @@ router.post(
   controller.createItem
 )
 
+/*
+ * Get items route
+*/
+router.get(
+  '/',
+  trimRequest.all,
+  controller.getItems
+)
+
+/*
+ * Get the most new Products route
+*/
+router.get(
+  '/AllnewProducts',
+  trimRequest.all,
+  controller.getnewItems
+)
+
 // /*
 //  * Get item route
 //  */
