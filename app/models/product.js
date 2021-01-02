@@ -120,7 +120,7 @@ const ProductSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    // urlImages: [ { url: { type: String, required: true} } ]
+    urlImages: [ { url: { type: String, required: true} } ]
   },
   {
     versionKey: false,

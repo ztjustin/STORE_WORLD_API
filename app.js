@@ -62,7 +62,7 @@ app.use(i18n.init)
 app.use("/images", express.static(path.join("/public/images")))
 app.use(express.json({ extented: false }));
 app.use(cookieParser())
-app.use(cors({credentials: true, origin: 'http://localhost:3001'}))
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}))
 app.use(passport.initialize())
 app.use(compression())
 app.use(helmet())

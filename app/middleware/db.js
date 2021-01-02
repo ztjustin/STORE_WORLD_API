@@ -28,7 +28,7 @@ const cleanPaginationID = result => {
  * Builds initial options for query
  * @param {Object} query - query object
  */
-const listInitOptions = async req => {
+const listInitOptions = async (req, populate) => {
   return new Promise(resolve => {
     const order = req.query.order || -1
     const sort = req.query.sort || 'createdAt'
@@ -38,6 +38,7 @@ const listInitOptions = async req => {
     const options = {
       sort: sortBy,
       lean: true,
+      // populate: populate,
       page,
       limit
     }
@@ -126,8 +127,8 @@ module.exports = {
    * @param {Object} req - request object
    * @param {Object} query - query object
    */
-  async getItems(req, model, query) {
-    const options = await listInitOptions(req)
+  async getItems(req, model, query, populate = "") {
+    const options = await listInitOptions(req, populate)
     return new Promise((resolve, reject) => {
       model.paginate(query, options, (err, items) => {
         if (err) {
