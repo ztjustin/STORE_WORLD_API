@@ -11,20 +11,15 @@ const requireAuth = passport.authenticate('jwt', {
 const trimRequest = require('trim-request')
 
 /*
- * Cities routes
+ * Users routes
  */
-
-/*
- * Get all items route
- */
-router.get('/all', controller.getAllItems)
 
 /*
  * Get items route
  */
 router.get(
   '/',
-
+  requireAuth,
   AuthController.roleAuthorization(['admin']),
   trimRequest.all,
   controller.getItems

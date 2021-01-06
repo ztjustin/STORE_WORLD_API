@@ -8,7 +8,7 @@ const db = require('../middleware/db')
  *********************/
 
 /**
- * Checks if a brand already exists excluding itself
+ * Checks if a city already exists excluding itself
  * @param {string} id - id of item
  * @param {string} name - name of item
  */
@@ -30,7 +30,7 @@ const brandExistsExcludingItself = async (id, name) => {
 }
 
 /**
- * Checks if a brand already exists in database
+ * Checks if a city already exists in database
  * @param {string} name - name of item
  */
 const brandExists = async name => {

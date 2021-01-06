@@ -23,6 +23,17 @@ router.get(
 );
 
 /*
+ * Get items route
+ */
+router.get(
+  '/',
+  requireAuth,
+  AuthController.roleAuthorization(['admin']),
+  trimRequest.all,
+  controller.getItems
+)
+
+/*
  * Create new item route
  */
 router.post(

@@ -38,7 +38,7 @@ const listInitOptions = async (req, populate) => {
     const options = {
       sort: sortBy,
       lean: true,
-      // populate: populate,
+      populate: populate,
       page,
       limit
     }
@@ -68,13 +68,26 @@ module.exports = {
           // Takes fields param and builds an array by splitting with ','
           const arrayFields = query.fields.split(',')
 
+          const filter = query.filter.toLowerCase();
+
           // Adds SQL Like %word% with regex
           arrayFields.map(item => {
-            array.push({
-              [item]: {
-                $regex: new RegExp(query.filter, 'i')
-              }
-            })
+            if(filter == 'true' || filter == "false"){
+              array.push({
+                [item]: {
+                   $eq: Boolean(filter) 
+                }
+              })
+            }else{
+              array.push({
+                [item]: {
+                  $regex: new RegExp(query.filter, 'i')
+                }
+              })
+            }
+
+
+
           })
           // Puts array result in data
           data.$or = array

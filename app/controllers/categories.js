@@ -130,3 +130,17 @@ exports.deleteItem = async (req, res) => {
     utils.handleError(res, error)
   }
 }
+
+/**
+ * Get items function called by route
+ * @param {Object} req - request object
+ * @param {Object} res - response object
+ */
+exports.getItems = async (req, res) => {
+  try {
+    const query = await db.checkQueryString(req.query)
+    res.status(200).json(await db.getItems(req, model, query))
+  } catch (error) {
+    utils.handleError(res, error)
+  }
+}
