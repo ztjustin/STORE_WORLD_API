@@ -28,7 +28,7 @@ const cleanPaginationID = result => {
  * Builds initial options for query
  * @param {Object} query - query object
  */
-const listInitOptions = async (req, populate) => {
+const listInitOptions = async (req, [...populate]) => {
   return new Promise(resolve => {
     const order = req.query.order || -1
     const sort = req.query.sort || 'createdAt'
@@ -38,7 +38,7 @@ const listInitOptions = async (req, populate) => {
     const options = {
       sort: sortBy,
       lean: true,
-      populate: populate,
+      populate: [...populate],
       page,
       limit
     }
@@ -85,8 +85,6 @@ module.exports = {
                 }
               })
             }
-
-
 
           })
           // Puts array result in data

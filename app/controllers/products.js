@@ -121,7 +121,7 @@ exports.upload = multer({ storage: storage }).fields([{ name: 'images', maxCount
 exports.getItems = async (req, res) => {
   try {
     const query = await db.checkQueryString(req.query)
-    res.status(200).json(await db.getItems(req, model, query, "equipment"))
+    res.status(200).json(await db.getItems(req, model, query, ["equipment", "brand"]))
     // res.status(200).json(await getAllFeaturedsItems())
   } catch (error) {
     utils.handleError(res, error)
