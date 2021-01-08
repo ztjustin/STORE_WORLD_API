@@ -17,7 +17,7 @@ const jwtExtractor = (req) => {
     token = req.body.token.trim();
   } else if (req.query.token) {
     token = req.query.token.trim();
-  } else if (req && req.cookies) {
+  } else if (req && req.cookies["next-auth.session-token"]) {
     const userCookie = jwt.decode(req.cookies["next-auth.session-token"]);
     token = userCookie.accessToken;
   }

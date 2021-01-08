@@ -21,6 +21,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
 
+var allowedOrigins = ['http://localhost:3000', 'https://cr-auto.herokuapp.com'];
+
 // Redis cache enabled by env variable
 if (process.env.USE_REDIS === 'true') {
   const getExpeditiousCache = require('express-expeditious')
@@ -62,7 +64,20 @@ app.use(i18n.init)
 app.use("/images", express.static(path.join("/public/images")))
 app.use(express.json({ extented: false }));
 app.use(cookieParser())
-app.use(cors())
+app.use(cors({
+  credentials: true,
+  origin: function(origin, callback){
+    // allow requests with no origin 
+    // (like mobile apps or curl requests)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+}));
 app.use(passport.initialize())
 app.use(compression())
 app.use(helmet())
