@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
 
-var allowedOrigins = ['https://cr-auto.herokuapp.com', 'https://cr-auto.herokuapp.com'];
+var allowedOrigins = ['http://localhost:3000', 'https://cr-auto.herokuapp.com'];
 
 // Redis cache enabled by env variable
 if (process.env.USE_REDIS === 'true') {
