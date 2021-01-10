@@ -15,17 +15,19 @@ const path = require("path");
 // Setup express server port from ENV, default: 3000
 app.set("port", process.env.PORT || 3000);
 
+app.use(cors());
+
 // Enable only in development HTTP request logger middleware
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-var allowedOrigins = [
-  "http://localhost:3000",
-  "https://nextjs-auto-cr-app.vercel.app",
-  "https://nextjs-auto-cr-app-git-main.ztjustin.vercel.app",
-  "https://nextjs-auto-cr-app.ztjustin.vercel.app",
-];
+// var allowedOrigins = [
+//   "http://localhost:3000",
+//   "https://nextjs-auto-cr-app.vercel.app",
+//   "https://nextjs-auto-cr-app-git-main.ztjustin.vercel.app",
+//   "https://nextjs-auto-cr-app.ztjustin.vercel.app",
+// ];
 
 // Redis cache enabled by env variable
 if (process.env.USE_REDIS === "true") {
@@ -68,9 +70,6 @@ app.use(i18n.init);
 app.use("/images", express.static(path.join("/public/images")));
 app.use(express.json({ extented: false }));
 app.use(cookieParser());
-app.use(
-  cors()
-);
 app.use(passport.initialize());
 app.use(compression());
 app.use(helmet());
