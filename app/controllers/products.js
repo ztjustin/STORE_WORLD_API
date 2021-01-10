@@ -16,7 +16,7 @@ const emailer = require('../middleware/emailer')
 const createItem = async (req,res) => {
   return new Promise(async (resolve, reject) => {
 
-    urlPath = 'https' + '://' + req.get("host");
+    urlPath = req.protocol + '://' + req.get("host");
     const urlImagesArray = await getArrayUrlImages(req.files,urlPath);
 
     const product = new model({
