@@ -10,9 +10,7 @@ const JwtStrategy = require("passport-jwt").Strategy;
  * @returns {string} token - decrypted token
  */
 const jwtExtractor = (req) => {
-  console.log("hola")
-  console.log(req.cookies["next-auth.session-token"]);
-  console.log(req.cookies[""])
+
   let token = null;
   if (req.headers.authorization) {
     token = req.headers.authorization.replace("Bearer ", "").trim();
@@ -20,10 +18,6 @@ const jwtExtractor = (req) => {
     token = req.body.token.trim();
   } else if (req.query.token) {
     token = req.query.token.trim();
-  } else if (req && req.cookies["next-auth.session-token"]) {
-    console.log("tiene la cookie")
-    const userCookie = jwt.decode(req.cookies["next-auth.session-token"]);
-    token = userCookie.accessToken;
   }
 
   // if (token) {

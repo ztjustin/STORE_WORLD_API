@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const compression = require("compression");
 const helmet = require("helmet");
+const cors = require("cors");
 const passport = require("passport");
 const app = express();
 const i18n = require("i18n");
@@ -13,9 +14,6 @@ const path = require("path");
 
 // Setup express server port from ENV, default: 3000
 app.set("port", process.env.PORT || 3000);
-
-const cors = require("cors");
-app.use(cors());
 
 // Enable only in development HTTP request logger middleware
 if (process.env.NODE_ENV === "development") {
@@ -70,6 +68,7 @@ app.use(i18n.init);
 app.use("/images", express.static(path.join("/public/images")));
 app.use(express.json({ extented: false }));
 app.use(cookieParser());
+app.use(cors());
 app.use(passport.initialize());
 app.use(compression());
 app.use(helmet());
