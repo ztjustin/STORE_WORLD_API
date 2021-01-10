@@ -10,6 +10,7 @@ const JwtStrategy = require("passport-jwt").Strategy;
  * @returns {string} token - decrypted token
  */
 const jwtExtractor = (req) => {
+  console.log(req.cookies);
   let token = null;
   if (req.headers.authorization) {
     token = req.headers.authorization.replace("Bearer ", "").trim();
