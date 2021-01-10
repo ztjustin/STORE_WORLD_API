@@ -17,7 +17,6 @@ app.set("port", process.env.PORT || 3000);
 const cors = require("cors");
 app.use(cors());
 
-
 // Enable only in development HTTP request logger middleware
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
