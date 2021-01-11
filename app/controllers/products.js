@@ -16,7 +16,7 @@ const emailer = require('../middleware/emailer')
 const createItem = async (req,res) => {
   return new Promise(async (resolve, reject) => {
 
-    urlPath = req.protocol + '://' + req.get("host");
+    urlPath = 'https://cr-auto.herokuapp.com';
     const urlImagesArray = await getArrayUrlImages(req.files,urlPath);
 
     const product = new model({
