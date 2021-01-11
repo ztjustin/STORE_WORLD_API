@@ -1,6 +1,7 @@
 const controller = require('../controllers/products')
 const validate = require('../controllers/products.validate')
 const AuthController = require('../controllers/auth')
+const uploadImages  = require("../middleware/uploadImages")
 const express = require('express')
 const router = express.Router()
 require('../../config/passport')
@@ -24,7 +25,7 @@ router.get('/all', controller.getItems)
  */
 router.post(
   '/',
-  controller.upload,
+  uploadImages.upload,
   requireAuth,
   AuthController.roleAuthorization(['admin']),
   trimRequest.all,

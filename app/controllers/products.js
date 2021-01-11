@@ -1,5 +1,5 @@
+require("dotenv").config();
 const model = require("../models/product");
-const uuid = require("uuid");
 const { matchedData } = require("express-validator");
 const utils = require("../middleware/utils");
 const db = require("../middleware/db");
@@ -15,8 +15,7 @@ const emailer = require("../middleware/emailer");
  */
 const createItem = async (req, res) => {
   return new Promise(async (resolve, reject) => {
-    urlPath = "https://cr-auto.herokuapp.com";
-    const urlImagesArray = await getArrayUrlImages(req.files, urlPath);
+    const urlImagesArray = await getArrayUrlImages(req.files);
 
     const product = new model({
       model: req.body.model,
@@ -59,11 +58,12 @@ const createItem = async (req, res) => {
  ********************/
 
 const getArrayUrlImages = (files, urlPath) => {
+  
   let array = [];
 
   if (files.images) {
     files.images.map((file) => {
-      let urlImage = urlPath + "/images/" + file.filename;
+      let urlImage = file.location;
       array.push({ url: urlImage });
     });
   }
@@ -71,38 +71,6 @@ const getArrayUrlImages = (files, urlPath) => {
   return array;
 };
 
-/********************
- * Multer functions *
- ********************/
-
-const multer = require("multer");
-
-const MIME_TYPE_MAP = {
-  "image/png": "png",
-  "image/jpg": "jpg",
-  "image/jpeg": "jpeg",
-};
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const isValid = MIME_TYPE_MAP[file.mimetype];
-    let error = new Error("Invalid Type");
-
-    if (isValid) {
-      error = null;
-    }
-    cb(error, "public/images");
-  },
-  filename: (req, file, cb) => {
-    const name = file.originalname.toLowerCase().split(" ").join("-");
-    const ext = MIME_TYPE_MAP[file.mimetype];
-    cb(null, name + "-" + Date.now() + + "-" + uuid()  +"." + ext);
-  },
-});
-
-exports.upload = multer({ storage: storage }).fields([
-  { name: "images", maxCount: 5 },
-]);
 
 /********************
  * Public functions *

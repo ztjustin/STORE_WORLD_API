@@ -65,7 +65,7 @@ i18n.configure({
 app.use(i18n.init);
 
 // Init all other stuff
-app.use("/images", express.static(path.join("/public/images")));
+// app.use("/images", express.static(path.join("/public/images")));
 app.use(express.json({ extented: false }));
 app.use(cookieParser());
 app.use(cors());
