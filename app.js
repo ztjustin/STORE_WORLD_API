@@ -50,7 +50,7 @@ app.use(
 // for parsing application/x-www-form-urlencoded
 app.use(
   bodyParser.urlencoded({
-    limit: "20mb",
+    limit: "90mb",
     extended: true,
   })
 );
