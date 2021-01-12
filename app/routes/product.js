@@ -25,7 +25,7 @@ router.get('/all', controller.getItems)
  */
 router.post(
   '/',
-  // uploadImages.upload,
+  uploadImages.upload,
   requireAuth,
   AuthController.roleAuthorization(['admin']),
   trimRequest.all,
