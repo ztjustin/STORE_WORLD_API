@@ -1,7 +1,7 @@
 const passport = require("passport");
 const User = require("../app/models/user");
-const auth = require("../app/middleware/auth");
-const jwt = require("jsonwebtoken");
+// const auth = require("../app/middleware/auth");
+// const jwt = require("jsonwebtoken");
 const JwtStrategy = require("passport-jwt").Strategy;
 
 /**
@@ -10,7 +10,6 @@ const JwtStrategy = require("passport-jwt").Strategy;
  * @returns {string} token - decrypted token
  */
 const jwtExtractor = (req) => {
-
   let token = null;
   if (req.headers.authorization) {
     token = req.headers.authorization.replace("Bearer ", "").trim();
@@ -26,6 +25,7 @@ const jwtExtractor = (req) => {
   // }
   return token;
 };
+
 
 /**
  * Options object for jwt middlware

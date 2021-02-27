@@ -58,7 +58,6 @@ const createItem = async (req, res) => {
  ********************/
 
 const getArrayUrlImages = (files, urlPath) => {
-  
   let array = [];
 
   if (files.images) {
@@ -70,7 +69,6 @@ const getArrayUrlImages = (files, urlPath) => {
 
   return array;
 };
-
 
 /********************
  * Public functions *
@@ -86,8 +84,17 @@ exports.getItems = async (req, res) => {
     const query = await db.checkQueryString(req.query);
     res
       .status(200)
-      .json(await db.getItems(req, model, query, ["equipment", "brand"]));
+      .json(await db.getItems(req, model, query, ["equipment", "brand", "category"]));
     // res.status(200).json(await getAllFeaturedsItems())
+  } catch (error) {
+    utils.handleError(res, error);
+  }
+};
+
+exports.getCookies = async (req, res) => {
+  try {
+    console.log(req.cookies)
+    res.send(req.cookies)
   } catch (error) {
     utils.handleError(res, error);
   }
@@ -191,20 +198,35 @@ exports.deleteItem = async (req, res) => {
 /**
  * Gets all items from database
  */
-const getAllFeaturedsItems = async () => {
+
+exports.getAllMyProducts = async (req, res) => {
   return new Promise((resolve, reject) => {
     model
       .find(
-        { featured: true },
+        { user: "5ff3717c916b4600174ebabe" },
         {},
         { sort: { createdAt: -1 } },
         (err, items) => {
           if (err) {
             reject(utils.buildErrObject(422, err.message));
           }
-          resolve(items);
+          res.status(200).json(items);
         }
       )
-      .limit(2);
+      .limit(20);
   });
+};
+
+/**
+ * Get items function called by route
+ * @param {Object} req - request object
+ * @param {Object} res - response object
+ */
+exports.getnewItems = async (req, res) => {
+  try {
+    const query = await db.checkQueryStringDates(req.query);
+    res.status(200).json(await db.getItems(req, model, query));
+  } catch (error) {
+    utils.handleError(res, error);
+  }
 };

@@ -115,5 +115,6 @@ UserSchema.methods.comparePassword = function(passwordAttempt, cb) {
     err ? cb(err) : cb(null, isMatch)
   )
 }
+
 UserSchema.plugin(mongoosePaginate)
 module.exports = mongoose.model('User', UserSchema)

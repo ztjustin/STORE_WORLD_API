@@ -1,6 +1,6 @@
 const crypto = require('crypto')
 const algorithm = 'aes-256-ecb'
-const secret = process.env.JWT_SECRET
+const secret = process.env.JWT_SECREThi
 
 module.exports = {
   /**

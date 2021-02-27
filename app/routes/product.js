@@ -1,55 +1,70 @@
-const controller = require('../controllers/products')
-const validate = require('../controllers/products.validate')
-const AuthController = require('../controllers/auth')
-const uploadImages  = require("../middleware/uploadImages")
-const express = require('express')
-const router = express.Router()
-require('../../config/passport')
-const passport = require('passport')
-const requireAuth = passport.authenticate('jwt', {
-  session: false
-})
-const trimRequest = require('trim-request')
-
-/*
- * Categories routes
-*/
+const controller = require("../controllers/products");
+const validate = require("../controllers/products.validate");
+const AuthController = require("../controllers/auth");
+const uploadImages = require("../middleware/uploadImages");
+const express = require("express");
+const router = express.Router();
+require("../../config/passport");
+const passport = require("passport");
+const requireAuth = passport.authenticate("jwt", {
+  session: false,
+});
+const trimRequest = require("trim-request");
 
 /*
  * Get all items route
-*/
-router.get('/all', controller.getItems)
+ */
+router.get(
+  "/all",
+  requireAuth,
+  AuthController.roleAuthorization(["admin"]),
+  controller.getItems
+);
 
 /*
  * Create new item route
  */
 router.post(
-  '/',
+  "/",
   uploadImages.upload,
   requireAuth,
-  AuthController.roleAuthorization(['admin']),
+  AuthController.roleAuthorization(["admin"]),
   trimRequest.all,
   validate.createItem,
   controller.createItem
-)
+);
 
 /*
  * Get items route
-*/
+ */
 router.get(
   '/',
+  requireAuth,
+  AuthController.roleAuthorization(["admin"]),
   trimRequest.all,
   controller.getItems
 )
 
+
+/*
+ * Get items route
+ */
+// router.get("/", trimRequest.all, controller.getItems);
+
 /*
  * Get the most new Products route
-*/
+ */
+// router.get(
+//   '/AllnewProducts',
+//   trimRequest.all,
+//   controller.getnewItems
+// )
+
 router.get(
-  '/AllnewProducts',
-  trimRequest.all,
-  controller.getnewItems
-)
+  "/allMyProducts",
+  AuthController.roleAuthorization(["admin"]),
+  controller.getAllMyProducts
+);
 
 // /*
 //  * Get item route
@@ -87,6 +102,4 @@ router.get(
 //   controller.deleteItem
 // )
 
-
-
-module.exports = router
+module.exports = router;

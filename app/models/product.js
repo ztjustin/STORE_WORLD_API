@@ -8,7 +8,6 @@ const ProductSchema = new mongoose.Schema(
       unique: false,
       required: true,
     },
-    
     brand: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Brand",
@@ -120,12 +119,19 @@ const ProductSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    urlImages: [ { url: { type: String, required: true} } ]
+    urlImages: [{ url: { type: String, required: true } }],
   },
   {
     versionKey: false,
     timestamps: true,
   }
 );
+
 ProductSchema.plugin(mongoosePaginate);
+ProductSchema.set("toJSON", {
+  virtuals: true,
+  transform: (doc, converted) => {
+    delete converted._id;
+  },
+});
 module.exports = mongoose.model("Products", ProductSchema);
