@@ -454,6 +454,7 @@ exports.login = async (req, res) => {
       // all ok, register access and return token
       user.loginAttempts = 0;
       await saveLoginAttemptsToDB(user);
+      if (!user.verified) return res.status(401).json(utils.buildErrObject(401,"Your account has not been verified."));
       let userItem = await saveUserAccessAndReturnToken(req, user);
       // Send Set-Cookie header
       res.cookie("authInfo", JSON.stringify(userItem));
