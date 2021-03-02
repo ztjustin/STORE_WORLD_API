@@ -145,9 +145,27 @@ module.exports = {
    * @param {Object} query - query object
    */
   async getItems(req, model, query, populate = "") {
+    console.log(query)
     const options = await listInitOptions(req, populate);
     return new Promise((resolve, reject) => {
       model.paginate(query, options, (err, items) => {
+        if (err) {
+          reject(buildErrObject(422, err.message));
+        }
+        resolve(cleanPaginationID(items));
+      });
+    });
+  },
+
+  /**
+   * Gets items from database by User
+   * @param {Object} req - request object
+   * @param {Object} query - query object
+   */
+  async getItemsByUser(req, model, populate = "") {
+    const options = await listInitOptions(req, populate);
+    return new Promise((resolve, reject) => {
+      model.paginate({ user : req.user._id }, options, (err, items) => {
         if (err) {
           reject(buildErrObject(422, err.message));
         }
