@@ -43,17 +43,21 @@ const createItem = async (req, res) => {
       urlImages: urlImagesArray,
       equipment: req.body.equipment,
     });
+
     product.save((err, item) => {
       if (err) {
         reject(utils.buildErrObject(422, err.message));
       }
 
-      product.populate("brand").populate("category", (err, item) => {
-        if (err) {
-          reject(utils.buildErrObject(422, err.message));
-        }
-        resolve(item);
-      });
+      product
+        .populate("brand")
+        .populate("equipment")
+        .populate("category", (err, item) => {
+          if (err) {
+            reject(utils.buildErrObject(422, err.message));
+          }
+          resolve(item);
+        });
     });
   });
 };
