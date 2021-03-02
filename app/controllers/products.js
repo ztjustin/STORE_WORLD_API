@@ -48,8 +48,12 @@ const createItem = async (req, res) => {
         reject(utils.buildErrObject(422, err.message));
       }
 
-      resolve(item.populate('brand'));
-
+      product.populate("brand").populate("category", (err, item) => {
+        if (err) {
+          reject(utils.buildErrObject(422, err.message));
+        }
+        resolve(item);
+      });
     });
   });
 };
