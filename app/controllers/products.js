@@ -48,8 +48,9 @@ const createItem = async (req, res) => {
         reject(utils.buildErrObject(422, err.message));
       }
 
-      resolve(item);
-    }).populate('brand');
+      resolve(item.populate('brand'));
+
+    });
   });
 };
 
