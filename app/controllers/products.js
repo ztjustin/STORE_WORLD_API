@@ -49,7 +49,7 @@ const createItem = async (req, res) => {
       }
 
       resolve(item);
-    });
+    }).populate('brand');
   });
 };
 
