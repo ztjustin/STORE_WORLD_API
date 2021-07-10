@@ -62,8 +62,9 @@ router.get(
 
 router.get(
   "/allMyProducts",
+  requireAuth,
   AuthController.roleAuthorization(["admin"]),
-  controller.getAllMyProducts
+  controller.getItemsByUser
 );
 
 // /*

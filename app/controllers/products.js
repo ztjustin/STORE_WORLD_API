@@ -39,16 +39,25 @@ const createItem = async (req, res) => {
       province: req.body.province,
       comment: req.body.comment,
       featured: req.body.featured,
-      user: req.body.user,
+      user: req.user._id,
       urlImages: urlImagesArray,
       equipment: req.body.equipment,
     });
+
     product.save((err, item) => {
       if (err) {
         reject(utils.buildErrObject(422, err.message));
       }
 
-      resolve(item);
+      product
+        .populate("brand")
+        .populate("equipment")
+        .populate("category", (err, item) => {
+          if (err) {
+            reject(utils.buildErrObject(422, err.message));
+          }
+          resolve(item);
+        });
     });
   });
 };
@@ -70,6 +79,25 @@ const getArrayUrlImages = (files, urlPath) => {
   return array;
 };
 
+/**
+ * Gets all items by USER from database
+ */
+const getAllItemsFromDBByUser = async (req) => {
+  return new Promise((resolve, reject) => {
+    model.find(
+      { user: req.user._id },
+      "-updatedAt -createdAt",
+      {},
+      (err, items) => {
+        if (err) {
+          reject(utils.buildErrObject(422, err.message));
+        }
+        resolve(items);
+      }
+    ).pagin;
+  });
+};
+
 /********************
  * Public functions *
  ********************/
@@ -84,21 +112,23 @@ exports.getItems = async (req, res) => {
     const query = await db.checkQueryString(req.query);
     res
       .status(200)
-      .json(await db.getItems(req, model, query, ["equipment", "brand", "category"]));
+      .json(
+        await db.getItems(req, model, query, ["equipment", "brand", "category"])
+      );
     // res.status(200).json(await getAllFeaturedsItems())
   } catch (error) {
     utils.handleError(res, error);
   }
 };
 
-exports.getCookies = async (req, res) => {
-  try {
-    console.log(req.cookies)
-    res.send(req.cookies)
-  } catch (error) {
-    utils.handleError(res, error);
-  }
-};
+// exports.getCookies = async (req, res) => {
+//   try {
+//     console.log(req.cookies)
+//     res.send(req.cookies)
+//   } catch (error) {
+//     utils.handleError(res, error);
+//   }
+// };
 
 /**
  * Get items function called by route
@@ -196,25 +226,20 @@ exports.deleteItem = async (req, res) => {
 };
 
 /**
- * Gets all items from database
+ * Get items function called by route
+ * @param {Object} req - request object
+ * @param {Object} res - response object
  */
-
-exports.getAllMyProducts = async (req, res) => {
-  return new Promise((resolve, reject) => {
-    model
-      .find(
-        { user: "5ff3717c916b4600174ebabe" },
-        {},
-        { sort: { createdAt: -1 } },
-        (err, items) => {
-          if (err) {
-            reject(utils.buildErrObject(422, err.message));
-          }
-          res.status(200).json(items);
-        }
-      )
-      .limit(20);
-  });
+exports.getItemsByUser = async (req, res) => {
+  try {
+    res
+      .status(200)
+      .json(
+        await db.getItemsByUser(req, model, ["equipment", "brand", "category"])
+      );
+  } catch (error) {
+    utils.handleError(res, error);
+  }
 };
 
 /**

@@ -167,12 +167,12 @@ exports.createItem = [
   //   .isArray()
   //   .withMessage("SHOULD_BE_AN_ARRAY"),
 
-  check("user")
-    .exists()
-    .withMessage("MISSING")
-    .not()
-    .isEmpty()
-    .withMessage("IS_EMPTY"),
+  // check("user")
+  //   .exists()
+  //   .withMessage("MISSING")
+  //   .not()
+  //   .isEmpty()
+  //   .withMessage("IS_EMPTY"),
 
   // // check("images")
   // //   .exists()
