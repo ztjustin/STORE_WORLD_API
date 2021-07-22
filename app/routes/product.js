@@ -16,6 +16,8 @@ const trimRequest = require("trim-request");
  */
 router.get(
   "/all",
+  requireAuth,
+  AuthController.roleAuthorization(["admin"]),
   controller.getItems
 );
 
